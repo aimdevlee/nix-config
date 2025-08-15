@@ -11,6 +11,12 @@
     
     # Provides utilities for working with multiple systems
     flake-utils.url = "github:numtide/flake-utils";
+    
+    # Pre-commit hooks for code quality enforcement
+    pre-commit-hooks = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -20,6 +26,7 @@
       nix-darwin,
       home-manager,
       flake-utils,
+      pre-commit-hooks,
       ...
     }@inputs:
     # System-specific outputs (Darwin configurations)
@@ -71,6 +78,52 @@
             echo "  darwin-rebuild   - Rebuild system configuration"
             echo ""
           '';
+        };
+        
+        # Pre-commit hooks for maintaining code quality
+        checks = {
+          pre-commit-check = pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              # Nix formatting check
+              nixfmt = {
+                enable = true;
+                package = pkgs.nixfmt-rfc-style;
+              };
+              
+              # Find dead Nix code
+              deadnix = {
+                enable = true;
+                settings = {
+                  # Don't remove underscore-prefixed bindings (often used intentionally)
+                  noUnderscore = true;
+                };
+              };
+              
+              # Nix anti-pattern detection
+              statix = {
+                enable = true;
+              };
+              
+              # Prevent committing large files
+              check-added-large-files = {
+                enable = true;
+                # 10MB limit
+                maxkb = 10240;
+              };
+              
+              # Ensure files end with newline
+              end-of-file-fixer = {
+                enable = true;
+                excludes = [ ".*\\.md$" ];
+              };
+              
+              # Remove trailing whitespace
+              trailing-whitespace = {
+                enable = true;
+              };
+            };
+          };
         };
       }
     );
