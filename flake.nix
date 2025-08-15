@@ -38,6 +38,40 @@
       {
         # Code formatter for .nix files - enforces consistent style
         formatter = pkgs.nixfmt-rfc-style;
+        
+        # Development shell with useful tools for working on this configuration
+        devShells.default = pkgs.mkShell {
+          name = "nix-darwin-dev";
+          
+          buildInputs = with pkgs; [
+            # Nix development essentials
+            nixfmt-rfc-style  # Format .nix files
+            nil               # Nix LSP for editor support
+            
+            # Flake management
+            nix-tree          # Visualize nix dependencies
+            nix-output-monitor # Better nix build output
+            
+            # Code quality tools
+            deadnix           # Find unused nix code
+            statix            # Nix anti-pattern linter
+            
+            # Git helpers
+            git
+            gh                # GitHub CLI
+          ];
+          
+          shellHook = ''
+            echo "🛠️  Nix-Darwin Development Environment"
+            echo ""
+            echo "Available commands:"
+            echo "  nix fmt          - Format all .nix files"
+            echo "  nix flake check  - Validate flake configuration"
+            echo "  nix flake update - Update all flake inputs"
+            echo "  darwin-rebuild   - Rebuild system configuration"
+            echo ""
+          '';
+        };
       }
     );
 }
