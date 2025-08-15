@@ -8,6 +8,9 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    
+    # Provides utilities for working with multiple systems
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs =
@@ -16,15 +19,25 @@
       nixpkgs,
       nix-darwin,
       home-manager,
+      flake-utils,
       ...
     }@inputs:
+    # System-specific outputs (Darwin configurations)
     {
       darwinConfigurations."aimdevlee" = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
-        # Pass all inputs to the host-specific configuration
         specialArgs = { inherit inputs; };
-        # The main entry point for this system's configuration
         modules = [ ./hosts/aimdevlee ];
       };
-    };
+    }
+    # Cross-platform outputs using flake-utils
+    // flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      {
+        # Code formatter for .nix files - enforces consistent style
+        formatter = pkgs.nixfmt-rfc-style;
+      }
+    );
 }
