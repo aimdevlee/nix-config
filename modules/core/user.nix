@@ -1,7 +1,7 @@
 # User-specific configuration module
 { config, lib, pkgs, ... }:
 let
-  constants = import ../lib/default.nix { inherit lib pkgs; };
+  constants = import ../../lib/default.nix { inherit lib pkgs; };
 in
 {
   options.modules.user = {

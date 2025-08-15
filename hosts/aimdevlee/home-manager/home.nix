@@ -20,8 +20,8 @@ in
 {
   # Import modular configurations
   imports = [
-    ../../../modules/user.nix
-    ../../../modules/theme.nix
+    ../../../modules/core/user.nix
+    ../../../modules/core/theme.nix
     ../../../modules/development.nix
   ];
 

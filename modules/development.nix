@@ -1,9 +1,22 @@
-# Development tools and environment configuration
+# Development module aggregator - imports and configures all development modules
 { config, lib, pkgs, unstable-pkgs ? pkgs, ... }:
-let
-  constants = import ../lib/default.nix { inherit lib pkgs; };
-in
 {
+  imports = [
+    # Language-specific modules
+    ./languages/nodejs.nix
+    
+    # Development tools
+    ./tools/git.nix
+    ./tools/cloud.nix
+    ./tools/containers.nix
+    ./tools/nix.nix
+    
+    # Shell configuration
+    ./shell/aliases.nix
+    ./shell/environment.nix
+  ];
+  
+  # Backward compatibility options for existing configuration
   options.modules.development = {
     enable = lib.mkEnableOption "development tools module";
     
@@ -28,100 +41,59 @@ in
     enableCloud = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Enable cloud development tools (AWS, etc.)";
+      description = "Enable cloud development tools";
     };
     
     enableContainers = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Enable container tools (Docker/Podman)";
+      description = "Enable container tools";
     };
   };
-
+  
+  # Map old options to new modular structure for backward compatibility
   config = lib.mkIf config.modules.development.enable {
-    home.packages = with pkgs; 
-      # Core development tools
-      [
-        # Version control
-        gh  # GitHub CLI
-        
-        # Terminal tools
-        tmux
-        eza  # Better ls
-      ]
-      
-      # Node.js development
-      ++ lib.optionals config.modules.development.enableNodejs [
-        nodejs_24
-        # Add yarn, pnpm if needed
-      ]
-      
-      # Nix development
-      ++ lib.optionals config.modules.development.enableNix [
-        nixfmt-rfc-style  # Nix formatter
-        nil  # Nix LSP
-      ]
-      
-      # LSP servers
-      ++ lib.optionals config.modules.development.enableLsp [
-        lua-language-server
-        # Add more LSP servers as needed
-      ]
-      
-      # Cloud tools
-      ++ lib.optionals config.modules.development.enableCloud [
-        awscli
-        # Add terraform, kubectl, etc. if needed
-      ]
-      
-      # Container tools
-      ++ lib.optionals config.modules.development.enableContainers [
-        podman
-        # Add docker-compose, k9s, etc. if needed
-      ];
-
-    # Shell aliases for development
-    programs.zsh.shellAliases = {
-      # Git aliases
-      g = "git";
-      gs = "git status";
-      ga = "git add";
-      gc = "git commit";
-      gp = "git push";
-      gpl = "git pull";
-      gco = "git checkout";
-      gb = "git branch";
-      
-      # Directory navigation
-      ls = "eza";
-      ll = "eza -l";
-      la = "eza -la";
-      lt = "eza --tree";
-      
-      # Nix shortcuts
-      ns = "sudo darwin-rebuild switch";
-      nfu = "nix flake update";
-      nfc = "nix flake check";
-      
-      # Development shortcuts
-      v = "nvim";
-      t = "tmux";
-      ta = "tmux attach";
-      tn = "tmux new-session -s";
+    # Enable new modular structure based on old options
+    modules.languages.nodejs = {
+      enable = config.modules.development.enableNodejs;
+      version = "24";
+      packageManager = "npm";
     };
-
-    # Zoxide for smart directory jumping
-    programs.zoxide = {
-      enable = true;
-      enableZshIntegration = true;
+    
+    modules.tools = {
+      git = {
+        enable = true;
+        enableGitHub = true;
+      };
+      
+      nix = {
+        enable = config.modules.development.enableNix;
+        enableLSP = config.modules.development.enableLsp;
+      };
+      
+      cloud = {
+        enable = config.modules.development.enableCloud;
+        enableAWS = true;
+      };
+      
+      containers = {
+        enable = config.modules.development.enableContainers;
+        runtime = "podman";
+      };
     };
-
-    # Development-related environment variables
-    home.sessionVariables = {
-      EDITOR = "nvim";
-      VISUAL = "nvim";
-      PAGER = "less";
-      LESS = "-R";
+    
+    modules.shell = {
+      aliases.enable = true;
+      environment.enable = true;
     };
+    
+    # Additional packages that don't fit into specific modules
+    home.packages = with pkgs; [
+      # Terminal tools
+      tmux
+      
+      # Language servers (if enableLsp is true)
+    ] ++ lib.optional config.modules.development.enableLsp
+      pkgs.lua-language-server;
   };
 }

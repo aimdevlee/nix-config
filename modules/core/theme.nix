@@ -1,7 +1,7 @@
 # Centralized theme and appearance configuration
 { config, lib, pkgs, ... }:
 let
-  constants = import ../lib/default.nix { inherit lib pkgs; };
+  constants = import ../../lib/default.nix { inherit lib pkgs; };
 in
 {
   options.modules.theme = {
