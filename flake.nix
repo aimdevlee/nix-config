@@ -8,10 +8,10 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    
+
     # Provides utilities for working with multiple systems
     flake-utils.url = "github:numtide/flake-utils";
-    
+
     # Pre-commit hooks for code quality enforcement
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
@@ -38,36 +38,37 @@
       };
     }
     # Cross-platform outputs using flake-utils
-    // flake-utils.lib.eachDefaultSystem (system:
+    // flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
         # Code formatter for .nix files - enforces consistent style
         formatter = pkgs.nixfmt-rfc-style;
-        
+
         # Development shell with useful tools for working on this configuration
         devShells.default = pkgs.mkShell {
           name = "nix-darwin-dev";
-          
+
           buildInputs = with pkgs; [
             # Nix development essentials
-            nixfmt-rfc-style  # Format .nix files
-            nil               # Nix LSP for editor support
-            
+            nixfmt-rfc-style # Format .nix files
+            nil # Nix LSP for editor support
+
             # Flake management
-            nix-tree          # Visualize nix dependencies
+            nix-tree # Visualize nix dependencies
             nix-output-monitor # Better nix build output
-            
+
             # Code quality tools
-            deadnix           # Find unused nix code
-            statix            # Nix anti-pattern linter
-            
+            deadnix # Find unused nix code
+            statix # Nix anti-pattern linter
+
             # Git helpers
             git
-            gh                # GitHub CLI
+            gh # GitHub CLI
           ];
-          
+
           shellHook = ''
             echo "🛠️  Nix-Darwin Development Environment"
             echo ""
@@ -79,7 +80,7 @@
             echo ""
           '';
         };
-        
+
         # Pre-commit hooks for maintaining code quality
         checks = {
           pre-commit-check = pre-commit-hooks.lib.${system}.run {
@@ -90,7 +91,7 @@
                 enable = true;
                 package = pkgs.nixfmt-rfc-style;
               };
-              
+
               # Find dead Nix code
               deadnix = {
                 enable = true;
@@ -99,25 +100,25 @@
                   noUnderscore = true;
                 };
               };
-              
+
               # Nix anti-pattern detection
               statix = {
                 enable = true;
               };
-              
+
               # Prevent committing large files
               check-added-large-files = {
                 enable = true;
                 # 10MB limit
                 maxkb = 10240;
               };
-              
+
               # Ensure files end with newline
               end-of-file-fixer = {
                 enable = true;
                 excludes = [ ".*\\.md$" ];
               };
-              
+
               # Remove trailing whitespace
               trailing-whitespace = {
                 enable = true;

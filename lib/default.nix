@@ -4,19 +4,23 @@ let
   # Detect if we're on Darwin/macOS
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
-  
+
   # System-specific configurations
-  systemConfig = if isDarwin then {
-    architecture = "aarch64-darwin";
-    stateVersion = 6;
-  } else {
-    architecture = "x86_64-linux";  # or detect actual Linux arch
-    stateVersion = "24.05";  # NixOS version
-  };
+  systemConfig =
+    if isDarwin then
+      {
+        architecture = "aarch64-darwin";
+        stateVersion = 6;
+      }
+    else
+      {
+        architecture = "x86_64-linux"; # or detect actual Linux arch
+        stateVersion = "24.05"; # NixOS version
+      };
 in
 {
   inherit isDarwin isLinux;
-  
+
   # User configuration constants
   user = {
     name = "aimdevlee";
@@ -62,7 +66,7 @@ in
       sapphire = "#74c7ec";
       blue = "#89b4fa";
       lavender = "#b4befe";
-      
+
       # Surface colors
       text = "#cdd6f4";
       subtext1 = "#bac2de";
@@ -73,7 +77,7 @@ in
       surface2 = "#585b70";
       surface1 = "#45475a";
       surface0 = "#313244";
-      
+
       # Background colors
       base = "#1e1e2e";
       mantle = "#181825";

@@ -1,24 +1,29 @@
 # Cloud development tools configuration
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.modules.tools.cloud;
 in
 {
   options.modules.tools.cloud = {
     enable = lib.mkEnableOption "cloud development tools";
-    
+
     enableAWS = lib.mkOption {
       type = lib.types.bool;
       default = true;
       description = "Enable AWS CLI and tools";
     };
-    
+
     enableTerraform = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = "Enable Terraform for infrastructure as code";
     };
-    
+
     enableKubernetes = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -27,7 +32,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; 
+    home.packages =
+      with pkgs;
       [ ]
       # AWS tools
       ++ lib.optionals cfg.enableAWS [
@@ -39,18 +45,18 @@ in
       # Kubernetes tools
       ++ lib.optionals cfg.enableKubernetes [
         kubectl
-        k9s  # Terminal UI for Kubernetes
+        k9s # Terminal UI for Kubernetes
         # kubectx for context switching
       ];
-    
+
     # Cloud-specific aliases
     programs.zsh.shellAliases = lib.mkIf config.programs.zsh.enable (
       lib.optionalAttrs cfg.enableAWS {
         # AWS shortcuts
         awsl = "aws configure list";
         awsp = "aws configure list-profiles";
-      } //
-      lib.optionalAttrs cfg.enableKubernetes {
+      }
+      // lib.optionalAttrs cfg.enableKubernetes {
         # Kubernetes shortcuts
         k = "kubectl";
         kgp = "kubectl get pods";

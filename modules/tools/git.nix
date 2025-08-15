@@ -1,18 +1,23 @@
 # Git configuration and tools
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.modules.tools.git;
 in
 {
   options.modules.tools.git = {
     enable = lib.mkEnableOption "Git tools and configuration";
-    
+
     enableGitHub = lib.mkOption {
       type = lib.types.bool;
       default = true;
       description = "Enable GitHub CLI and related tools";
     };
-    
+
     enableDelta = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -21,13 +26,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; 
+    home.packages =
+      with pkgs;
       [ ]
       # GitHub CLI for PR management
       ++ lib.optional cfg.enableGitHub gh
       # Enhanced diff viewer
       ++ lib.optional cfg.enableDelta delta;
-    
+
     # Git aliases for common operations
     programs.zsh.shellAliases = lib.mkIf config.programs.zsh.enable {
       # Basic git commands
@@ -39,14 +45,14 @@ in
       gpl = "git pull";
       gco = "git checkout";
       gb = "git branch";
-      
+
       # Advanced git commands
       glog = "git log --oneline --graph --decorate";
       gdiff = "git diff";
       gstash = "git stash";
       grebase = "git rebase";
       gmerge = "git merge";
-      
+
       # Git flow shortcuts
       gf = "git flow";
       gfi = "git flow init";
@@ -54,7 +60,7 @@ in
       gfr = "git flow release";
       gfh = "git flow hotfix";
     };
-    
+
     # Delta configuration for better diffs
     programs.git.delta = lib.mkIf cfg.enableDelta {
       enable = true;

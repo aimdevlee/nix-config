@@ -18,7 +18,7 @@
   modules = {
     user = {
       enable = true;
-      enableGitSigning = true;  # Enable SSH signing for commits
+      enableGitSigning = true; # Enable SSH signing for commits
     };
     theme.enable = true;
     development = {
@@ -66,11 +66,11 @@
   programs = {
     home-manager.enable = true;
     neovim.enable = true;
-    
+
     # Note: Git is configured by the user module
     # Note: Starship is configured by the theme module
     # Note: Zoxide is configured by the development module
-    
+
     zsh = {
       enable = true;
       initContent = ''

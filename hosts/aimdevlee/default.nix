@@ -12,7 +12,7 @@ in
 
   # Apply overlays for package management
   nixpkgs.overlays = overlays;
-  
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -28,7 +28,7 @@ in
     users.aimdevlee = {
       imports = [ ./home-manager/home.nix ];
     };
-    
+
     # Use system packages (with overlays applied)
     useGlobalPkgs = true;
     useUserPackages = true;

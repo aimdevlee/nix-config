@@ -9,7 +9,7 @@ in
 [
   # Unstable packages overlay
   unstablePackages
-  
+
   # Custom package modifications
   (final: prev: {
     # Example: Override a package with custom configuration
@@ -17,7 +17,7 @@ in
     #   withNodeJs = true;
     #   withPython3 = true;
     # };
-    
+
     # Example: Add a custom package
     # myCustomPackage = final.callPackage ./packages/my-package.nix { };
   })
