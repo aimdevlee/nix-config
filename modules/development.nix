@@ -1,5 +1,5 @@
 # Development module aggregator - imports and configures all development modules
-{ config, lib, pkgs, unstable-pkgs ? pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
   imports = [
     # Language-specific modules

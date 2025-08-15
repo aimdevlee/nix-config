@@ -2,21 +2,10 @@
 # Refactored to use modular configuration
 {
   pkgs,
-  unstable-pkgs,
   config,
   lib,
   ...
 }:
-let
-  my-overlay = final: prev: {
-    # Custom package overlays can be defined here
-    # Example:
-    # ollama = prev.ollama.overrideAttrs (oldAttrs: {
-    #   version = "0.11.3";
-    #   ...
-    # });
-  };
-in
 {
   # Import modular configurations
   imports = [
@@ -41,9 +30,6 @@ in
       enableContainers = true;
     };
   };
-
-  # Apply overlays
-  nixpkgs.overlays = [ my-overlay ];
 
   # Additional packages not covered by modules
   home.packages = with pkgs; [

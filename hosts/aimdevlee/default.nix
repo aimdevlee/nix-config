@@ -1,11 +1,7 @@
 { inputs, ... }:
 let
-  unstable-pkgs = import inputs.nixpkgs-unstable {
-    system = "aarch64-darwin";
-    config.apple_sdk.frameworks.Security.provider = "pkg-config";
-    config.apple_sdk.frameworks.SystemConfiguration.provider = "pkg-config";
-    config.allowUnfree = true;
-  };
+  # Import overlay configuration
+  overlays = import ../../overlays/default.nix { inherit inputs; };
 in
 {
   # Import the system-wide configuration and the home-manager module.
@@ -13,6 +9,12 @@ in
     ./configuration.nix
     inputs.home-manager.darwinModules.home-manager
   ];
+
+  # Apply overlays for package management
+  nixpkgs.overlays = overlays;
+  
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 
   # Define the user for this system.
   users.users.aimdevlee = {
@@ -24,9 +26,12 @@ in
   # It imports the configuration from the dedicated home.nix file.
   home-manager = {
     users.aimdevlee = {
-      _module.args = { inherit unstable-pkgs; };
       imports = [ ./home-manager/home.nix ];
     };
+    
+    # Use system packages (with overlays applied)
+    useGlobalPkgs = true;
+    useUserPackages = true;
   };
 
   # Set the platform for this configuration.

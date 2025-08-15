@@ -1,5 +1,5 @@
 # Nix development tools configuration
-{ config, lib, pkgs, unstable-pkgs ? pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
   cfg = config.modules.tools.nix;
 in
