@@ -37,9 +37,9 @@
   ];
 
   # Additional environment variables
+  # Note: Most environment variables are handled by modules/shell/environment.nix
   home.sessionVariables = {
-    # Starship config path (theme module handles the actual config)
-    STARSHIP_CONFIG = "$HOME/.config/starship/starship.toml";
+    # Add any host-specific environment variables here
   };
 
   # Link config files to their correct locations
