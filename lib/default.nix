@@ -4,7 +4,6 @@ let
   # Detect if we're on Darwin/macOS
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
-  
 
   # System-specific configurations
   systemConfig =
