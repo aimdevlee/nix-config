@@ -166,10 +166,10 @@ direnv allow
 ./scripts/check.sh
 
 # Individual checks
-nix fmt -- --check .       # Format check
+nix fmt -- --check .      # Format check
 nix flake check           # Flake validation
-deadnix --fail .          # Dead code check
-statix check .            # Anti-pattern check
+deadnix .                 # Dead code check (warnings allowed)
+statix check .            # Anti-pattern check (warnings allowed)
 ```
 
 ### Updating Dependencies
@@ -187,9 +187,9 @@ sudo darwin-rebuild switch --flake .
 
 GitHub Actions workflow (`ci.yml`) runs:
 - **validate**: Format and flake checks
-- **quality**: Dead code and anti-pattern detection
+- **quality**: Dead code and anti-pattern detection (warnings allowed)
 - **dependencies**: Flake input analysis
-- **security**: Secret scanning
+- **security**: Secret scanning (PRs and scheduled only)
 - **build-darwin**: macOS build test (on schedule or [build] tag)
 
 ## Important Notes
@@ -199,6 +199,8 @@ GitHub Actions workflow (`ci.yml`) runs:
 - All user-specific values reference `lib/default.nix` constants
 - Overlays manage stable/unstable package selection
 - Pre-commit hooks enforce code quality
+- CI allows warnings from deadnix and statix for intentional patterns
+- Security scanning only runs on PRs to avoid BASE=HEAD issues
 
 ## Development Aliases
 Key aliases configured across modules:
