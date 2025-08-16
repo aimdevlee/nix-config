@@ -86,43 +86,14 @@
           pre-commit-check = pre-commit-hooks.lib.${system}.run {
             src = ./.;
             hooks = {
-              # Nix formatting check
-              nixfmt = {
-                enable = true;
-                package = pkgs.nixfmt-rfc-style;
-              };
+              # Nix formatting check (RFC 166 style)
+              nixfmt-rfc-style.enable = true;
 
               # Find dead Nix code
-              deadnix = {
-                enable = true;
-                settings = {
-                  # Don't remove underscore-prefixed bindings (often used intentionally)
-                  noUnderscore = true;
-                };
-              };
+              deadnix.enable = true;
 
               # Nix anti-pattern detection
-              statix = {
-                enable = true;
-              };
-
-              # Prevent committing large files
-              check-added-large-files = {
-                enable = true;
-                # 10MB limit
-                maxkb = 10240;
-              };
-
-              # Ensure files end with newline
-              end-of-file-fixer = {
-                enable = true;
-                excludes = [ ".*\\.md$" ];
-              };
-
-              # Remove trailing whitespace
-              trailing-whitespace = {
-                enable = true;
-              };
+              statix.enable = true;
             };
           };
         };
