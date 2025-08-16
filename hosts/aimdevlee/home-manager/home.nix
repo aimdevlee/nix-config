@@ -2,8 +2,6 @@
 # Refactored to use modular configuration
 {
   pkgs,
-  config,
-  lib,
   ...
 }:
 {

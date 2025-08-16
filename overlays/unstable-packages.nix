@@ -1,7 +1,7 @@
 # Unstable packages overlay
 # Selectively use packages from nixpkgs-unstable for newer versions
 { inputs }:
-final: prev:
+final: _prev:
 let
   # Import unstable nixpkgs
   unstable = import inputs.nixpkgs-unstable {

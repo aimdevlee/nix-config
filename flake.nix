@@ -21,10 +21,8 @@
 
   outputs =
     {
-      self,
       nixpkgs,
       nix-darwin,
-      home-manager,
       flake-utils,
       pre-commit-hooks,
       ...

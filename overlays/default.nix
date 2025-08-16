@@ -10,8 +10,8 @@ in
   # Unstable packages overlay
   unstablePackages
 
-  # Custom package modifications
-  (final: prev: {
+  # Custom package modifications (placeholder for future use)
+  (_final: _prev: {
     # Example: Override a package with custom configuration
     # neovim = prev.neovim.override {
     #   withNodeJs = true;
