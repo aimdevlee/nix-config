@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+echo "🔨 Rebuilding configuration for host: $(hostname -s)"
+sudo darwin-rebuild switch --flake ".#$(hostname -s)"

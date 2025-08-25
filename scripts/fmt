@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+echo "📝 Formatting Nix files..."
+nix fmt

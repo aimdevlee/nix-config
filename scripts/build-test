@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+echo "🧪 Testing build for host: $(hostname -s)"
+nix build ".#darwinConfigurations.$(hostname -s).system" --dry-run
