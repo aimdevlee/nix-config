@@ -37,11 +37,7 @@
       enableCompletion = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
-      initContent = ''
-
-        # XDG PATH
-        export XDG_CONFIG_HOME=$HOME/.config
-      '';
+      initContent = '''';
     };
 
     # Git configuration
@@ -105,5 +101,9 @@
 
     # Home state version
     stateVersion = "25.05";
+  };
+
+  xdg = {
+    enable = true;
   };
 }
