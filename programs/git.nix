@@ -14,6 +14,11 @@
       default = false;
       description = "Enable delta for better git diffs";
     };
+    enableLazygit = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable Lazygit";
+    };
   };
 
   config = lib.mkIf config.programs.git.enable {
@@ -72,6 +77,13 @@
       };
     };
 
+    programs.lazygit = lib.mkIf config.programs.git.enableLazygit {
+      enable = true;
+      settings = {
+        git.overrideGpg = true;
+      };
+    };
+
     # Git-related packages
     home.packages =
       with pkgs;
@@ -80,7 +92,6 @@
         gh
 
         # Git UI and helpers
-        lazygit # Terminal UI for git
 
         # Security
         gitleaks # Detect secrets in git repos

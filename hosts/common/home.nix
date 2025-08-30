@@ -43,6 +43,8 @@
     # Git configuration
     git = {
       enable = true;
+      enableDelta = true;
+      enableLazygit = true;
       # userName is set in host-specific home.nix
       # userEmail is set in host-specific home.nix
     };
