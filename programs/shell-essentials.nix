@@ -33,9 +33,6 @@
       curl # Data transfer tool
       htop # Interactive process viewer
 
-      # System information
-      neofetch # System info display
-
       # Security tools
       sops # Secrets management
     ];

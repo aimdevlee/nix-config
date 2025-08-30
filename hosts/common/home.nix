@@ -90,6 +90,10 @@
         use-agent = true;
       };
     };
+
+    fastfetch = {
+      enable = true;
+    };
   };
 
   # Home configuration
