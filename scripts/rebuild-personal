@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+echo "🏠 Switching to personal profile..."
+echo ""
+
+# Set TARGET to personal and run rebuild
+TARGET=personal "$(dirname "$0")/rebuild"

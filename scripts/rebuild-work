@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+echo "💼 Switching to work profile..."
+echo ""
+
+# Set TARGET to work and run rebuild
+TARGET=work "$(dirname "$0")/rebuild"

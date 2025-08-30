@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+echo "📝 Formatting Nix files..."
+
+# Find all .nix files and format them using nixfmt-rfc-style
+find . -name "*.nix" -type f | while read -r file; do
+    echo "  Formatting: $file"
+    nixfmt "$file" 2>/dev/null || {
+        echo "  ⚠️  Failed to format: $file"
+    }
+done
+
+echo "✅ Formatting complete!"

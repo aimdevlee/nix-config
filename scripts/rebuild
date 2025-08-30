@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Use TARGET environment variable if set, otherwise default to 'personal'
+TARGET="${TARGET:-personal}"
+
+echo "🔨 Rebuilding configuration for profile: $TARGET"
+echo "   (Set TARGET=work or TARGET=personal to switch profiles)"
+echo ""
+
+sudo darwin-rebuild switch --flake ".#$TARGET"
