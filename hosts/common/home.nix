@@ -105,6 +105,11 @@
     # Home state version
     stateVersion = "25.05";
 
+    packages = with pkgs; [
+      go
+    ];
+  };
+
   services = {
     gpg-agent = {
       enable = true;
