@@ -86,9 +86,6 @@
     # GPG configuration
     gpg = {
       enable = true;
-      settings = {
-        use-agent = true;
-      };
     };
 
     fastfetch = {
@@ -107,6 +104,16 @@
 
     # Home state version
     stateVersion = "25.05";
+
+  services = {
+    gpg-agent = {
+      enable = true;
+      defaultCacheTtl = 43200;
+      pinentry = {
+        package = pkgs.pinentry_mac;
+      };
+    };
+
   };
 
   xdg = {

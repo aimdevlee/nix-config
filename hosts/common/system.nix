@@ -36,9 +36,6 @@
 
       # Cloud & Infrastructure
       "saml2aws" # AWS SAML authentication
-
-      # Security
-      "pinentry-mac"
     ];
 
     # Common GUI applications for all hosts
