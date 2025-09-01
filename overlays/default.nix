@@ -10,15 +10,22 @@ in
   # Unstable packages overlay
   unstablePackages
 
-  # Custom package modifications (placeholder for future use)
-  (_final: _prev: {
-    # Example: Override a package with custom configuration
-    # neovim = prev.neovim.override {
-    #   withNodeJs = true;
-    #   withPython3 = true;
-    # };
+  # Custom package modifications
+  (_final: prev: {
+    # Disable tests for Node.js packages to avoid sandbox network test failures
+    nodejs_20 = prev.nodejs_20.overrideAttrs (_oldAttrs: {
+      doCheck = false;
+      doInstallCheck = false;
+    });
 
-    # Example: Add a custom package
-    # myCustomPackage = final.callPackage ./packages/my-package.nix { };
+    nodejs_22 = prev.nodejs_22.overrideAttrs (_oldAttrs: {
+      doCheck = false;
+      doInstallCheck = false;
+    });
+
+    nodejs_24 = prev.nodejs_24.overrideAttrs (_oldAttrs: {
+      doCheck = false;
+      doInstallCheck = false;
+    });
   })
 ]

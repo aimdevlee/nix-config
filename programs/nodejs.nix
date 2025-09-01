@@ -22,15 +22,10 @@
       default = "24";
       description = "Node.js major version";
     };
-
-    packageManager = lib.mkOption {
-      type = lib.types.enum [
-        "npm"
-        "yarn"
-        "pnpm"
-      ];
-      default = "npm";
-      description = "Package manager to use";
+    enableCorepack = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable corepack";
     };
   };
 
@@ -46,13 +41,7 @@
           else
             nodejs_24;
       in
-      [
-        (nodePackage.overrideAttrs (oldAttrs: {
-          doCheck = false;
-        }))
-      ]
-      ++ lib.optionals (config.programs.nodejs.packageManager == "yarn") [ yarn ]
-      ++ lib.optionals (config.programs.nodejs.packageManager == "pnpm") [ pnpm ];
+      [ nodePackage ] ++ lib.optionals config.programs.nodejs.enableCorepack [ corepack_24 ];
 
     home.sessionVariables = {
       # Reasonable default memory limit for Node.js

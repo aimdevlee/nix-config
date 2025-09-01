@@ -63,7 +63,7 @@
     nodejs = {
       enable = true;
       version = "24";
-      packageManager = "npm";
+      enableCorepack = true; # Disabled to avoid build issues
     };
 
     nix.enableTools = true;
