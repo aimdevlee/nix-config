@@ -6,18 +6,6 @@ _: {
 
     # Host-specific Homebrew packages
     brews = [
-      # Host-specific additions only
-      "screenresolution"
-
-      # Container & Virtualization (host-specific preference)
-      "colima" # Container runtime
-      "docker"
-      "docker-compose"
-      "docker-completion"
-      "dockerize"
-      "lima" # Linux VMs
-      "qemu"
-
       # Database (host-specific requirement)
       "mysql@8.0"
 

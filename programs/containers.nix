@@ -12,43 +12,18 @@
       default = false;
       description = "Enable container runtime tools";
     };
-
-    runtime = lib.mkOption {
-      type = lib.types.enum [
-        "docker"
-        "podman"
-      ];
-      default = "podman";
-      description = "Container runtime to use";
-    };
-
-    enableCompose = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Enable Docker/Podman Compose";
-    };
   };
 
   config = lib.mkIf config.programs.containers.enable {
     home.packages =
       with pkgs;
-      let
-        isDocker = config.programs.containers.runtime == "docker";
-        isPodman = config.programs.containers.runtime == "podman";
-      in
+
       # Docker packages
-      lib.optionals isDocker [
+      [
         docker
         docker-credential-helpers
-      ]
-      # Podman packages
-      ++ lib.optionals isPodman [
-        podman
-        podman-compose
-      ]
-      # Compose (for Docker)
-      ++ lib.optionals (isDocker && config.programs.containers.enableCompose) [
         docker-compose
+        colima
       ];
 
     # Container-specific aliases
@@ -60,8 +35,8 @@
     };
 
     # Environment variables
-    home.sessionVariables = lib.mkIf (config.programs.containers.runtime == "docker") {
-      DOCKER_HOST = "unix://$HOME/.colima/docker.sock";
+    home.sessionVariables = {
+      # DOCKER_HOST = "unix://$HOME/.colima/docker.sock";
     };
   };
 }

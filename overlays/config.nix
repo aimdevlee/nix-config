@@ -30,6 +30,7 @@
   containers = [
     "colima" # Container runtime
     "docker-compose" # Compose for colima
+    "docker"
   ];
 
   # Additional packages can be added here

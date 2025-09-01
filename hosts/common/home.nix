@@ -75,11 +75,7 @@
       enableKubernetes = true;
     };
 
-    containers = {
-      enable = true;
-      runtime = "podman";
-      enableCompose = true;
-    };
+    containers.enable = true;
 
     dotfiles.enable = true;
 

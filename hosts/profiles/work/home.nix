@@ -46,6 +46,8 @@
         nvim = lib.mkForce false;
       };
     };
+
+    containers.enable = true;
   };
 
   # Work profile package additions
