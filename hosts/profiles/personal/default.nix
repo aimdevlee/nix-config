@@ -19,6 +19,7 @@
     users.aimdevlee = import ./home.nix;
     useGlobalPkgs = true;
     useUserPackages = true;
+    extraSpecialArgs = { inherit inputs; };
   };
 
   # System platform

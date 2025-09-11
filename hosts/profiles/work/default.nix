@@ -19,6 +19,7 @@
     users.dongbin-lee = import ./home.nix;
     useGlobalPkgs = true;
     useUserPackages = true;
+    extraSpecialArgs = { inherit inputs; };
   };
 
   # System platform
