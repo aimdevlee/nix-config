@@ -5,8 +5,6 @@
 }:
 {
   imports = [
-    inputs.home-manager.darwinModules.home-manager
-    ../../common/system.nix # Common system configuration
     ./system.nix # Profile-specific system overrides
   ];
 

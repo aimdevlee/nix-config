@@ -35,7 +35,11 @@
           specialArgs = {
             inherit inputs;
           };
-          modules = [ ./hosts/profiles/${profile}/default.nix ];
+          modules = [
+            inputs.home-manager.darwinModules.home-manager
+            ./hosts/common/system.nix
+            ./hosts/profiles/${profile}/default.nix
+          ];
         };
     in
     # System-specific outputs (Darwin configurations)
