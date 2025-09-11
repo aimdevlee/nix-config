@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
-echo "🧪 Testing build for host: $(hostname -s)"
-nix build ".#darwinConfigurations.$(hostname -s).system" --dry-run
+
+# Use TARGET environment variable if set, otherwise default to 'personal'
+TARGET="${TARGET:-personal}"
+
+echo "🧪 Testing build for profile: $TARGET"
+echo "   (Set TARGET=work or TARGET=personal to switch profiles)"
+echo ""
+
+nix build ".#darwinConfigurations.$TARGET.system" --dry-run
