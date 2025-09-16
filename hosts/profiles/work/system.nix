@@ -11,6 +11,8 @@ _: {
 
       # AI Tools (host-specific requirement)
       "ollama"
+
+      "peco"
     ];
 
     casks = [
