@@ -41,7 +41,7 @@
     # Common GUI applications for all hosts
     casks = [
       # Terminal & Development
-      "ghostty@tip" # Modern terminal emulator (nightly build)
+      "ghostty" # Modern terminal emulator
       "visual-studio-code" # Code editor
 
       # Productivity & Utilities
