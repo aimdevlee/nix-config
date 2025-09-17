@@ -50,7 +50,14 @@
     };
 
     # Theme configuration
-    starship.enable = true;
+    starship.enable = false;
+
+    # Oh My Posh prompt
+    oh-my-posh = {
+      enable = true;
+      enableZshIntegration = true;
+      useTheme = "pure";
+    };
 
     # Enable direnv for automatic environment loading
     direnv = {
@@ -77,7 +84,10 @@
 
     containers.enable = true;
 
-    dotfiles.enable = true;
+    dotfiles = {
+      enable = true;
+      configs.starship = false;
+    };
 
     # GPG configuration
     gpg = {

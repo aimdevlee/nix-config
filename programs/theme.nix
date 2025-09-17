@@ -50,11 +50,7 @@ in
       THEME_NAME = catppuccinMocha.name;
     };
 
-    # Starship prompt with theme
-    programs.starship = {
-      enable = true;
-      enableZshIntegration = true;
-      # Settings are loaded from dotfiles/starship.toml via dotfiles module
-    };
+    # Theme colors are now used by Oh My Posh configuration
+    # The color values are integrated directly into the Oh My Posh theme JSON
   };
 }

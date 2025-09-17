@@ -28,9 +28,6 @@
       initContent = ''
         # Additional zsh configuration
         # Add custom zsh configurations here
-
-        # Set Starship config path
-        export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
       '';
     };
 
