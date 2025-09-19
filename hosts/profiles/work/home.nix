@@ -41,12 +41,6 @@
     #   userName and userEmail are set in ~/.gitconfig.local
     # };
 
-    dotfiles = {
-      configs = {
-        nvim = lib.mkForce false;
-      };
-    };
-
     containers.enable = true;
   };
 
