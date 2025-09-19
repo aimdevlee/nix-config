@@ -33,15 +33,10 @@
     home.packages =
       with pkgs;
       let
-        nodePackage =
-          if config.programs.nodejs.version == "20" then
-            nodejs_20
-          else if config.programs.nodejs.version == "22" then
-            nodejs_22
-          else
-            nodejs_24;
+        nodePackage = pkgs."nodejs_${config.programs.nodejs.version}";
+        corepackPackage = pkgs."corepack_${config.programs.nodejs.version}";
       in
-      [ nodePackage ] ++ lib.optionals config.programs.nodejs.enableCorepack [ corepack_24 ];
+      [ nodePackage ] ++ lib.optionals config.programs.nodejs.enableCorepack [ corepackPackage ];
 
     home.sessionVariables = {
       # Reasonable default memory limit for Node.js

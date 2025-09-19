@@ -7,6 +7,37 @@
   # Nix configuration
   nix.settings = {
     experimental-features = "nix-command flakes";
+
+    # Performance optimization
+    max-jobs = "auto"; # Use all available CPU cores
+    cores = 0; # Use all cores for parallel builds
+    keep-outputs = true; # Keep build outputs for debugging
+    keep-derivations = true; # Protect from garbage collection
+
+    # Binary caches for faster downloads
+    substituters = [
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+    ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+
+  };
+
+  # Automatic store optimization (darwin-specific)
+  nix.optimise.automatic = true;
+
+  # Automatic garbage collection
+  nix.gc = {
+    automatic = true;
+    interval = {
+      Weekday = 0;
+      Hour = 12;
+      Minute = 0;
+    }; # Weekly on Sunday at 12 PM
+    options = "--delete-older-than 30d";
   };
 
   # System packages available to all users
@@ -19,8 +50,8 @@
 
     # Activation settings
     onActivation = {
-      autoUpdate = true; # Auto-update Homebrew on activation
-      cleanup = "uninstall"; # Aggressive cleanup - removes unlisted casks
+      autoUpdate = false; # Manual update for better performance
+      cleanup = "zap"; # Less aggressive cleanup
     };
 
     # Common taps for all hosts

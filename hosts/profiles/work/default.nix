@@ -22,6 +22,6 @@
     extraSpecialArgs = { inherit inputs; };
   };
 
-  # System platform
-  nixpkgs.hostPlatform = "aarch64-darwin";
+  # System platform (dynamically detected)
+  nixpkgs.hostPlatform = builtins.currentSystem or "aarch64-darwin";
 }

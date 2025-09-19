@@ -109,10 +109,10 @@
     };
 
     # Home state version
-    stateVersion = "25.05";
+    stateVersion = "24.11";
 
     packages = with pkgs; [
-      go
+      go  # Explicitly install Go for development
     ];
   };
 
