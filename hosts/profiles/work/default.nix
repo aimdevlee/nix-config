@@ -1,6 +1,7 @@
 # Work profile configuration
 {
   inputs,
+  system,
   ...
 }:
 {
@@ -22,6 +23,6 @@
     extraSpecialArgs = { inherit inputs; };
   };
 
-  # System platform
-  nixpkgs.hostPlatform = "aarch64-darwin";
+  # System platform (passed from flake)
+  nixpkgs.hostPlatform = system;
 }

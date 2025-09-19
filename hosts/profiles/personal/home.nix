@@ -1,6 +1,5 @@
 # Personal profile home-manager configuration
-{ ... }:
-{
+_: {
   imports = [
     ../../common/home.nix # Import common home configuration
   ];
@@ -13,7 +12,6 @@
     };
     zsh = {
       shellAliases = {
-        cc = "npx @anthropic-ai/claude-code";
       };
     };
   };

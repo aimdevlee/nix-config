@@ -12,31 +12,30 @@
       default = false;
       description = "Enable container runtime tools";
     };
+
+    runtime = lib.mkOption {
+      type = lib.types.enum [
+        "docker"
+        "colima"
+      ];
+      default = "colima";
+      description = "Container runtime to use";
+    };
   };
 
   config = lib.mkIf config.programs.containers.enable {
     home.packages =
       with pkgs;
-
-      # Docker packages
       [
         docker
         docker-credential-helpers
         docker-compose
-        colima
-      ];
-
-    # Container-specific aliases
-    programs.zsh.shellAliases = {
-      # Common aliases that work for both
-      # d = config.programs.containers.runtime;
-      # dps = "${config.programs.containers.runtime} ps";
-      # di = "${config.programs.containers.runtime} images";
-    };
+      ]
+      ++ lib.optional (config.programs.containers.runtime == "colima") colima;
 
     # Environment variables
-    home.sessionVariables = {
-      # DOCKER_HOST = "unix://$HOME/.colima/docker.sock";
+    home.sessionVariables = lib.mkIf (config.programs.containers.runtime == "colima") {
+      # DOCKER_HOST = "unix://\$HOME/.colima/docker.sock";
     };
   };
 }

@@ -5,6 +5,9 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.programs.git;
+in
 {
   options.programs.git = {
     # Git configuration options are provided by home-manager
@@ -14,17 +17,30 @@
       default = false;
       description = "Enable delta for better git diffs";
     };
+
     enableLazygit = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "Enable Lazygit";
+      description = "Enable Lazygit terminal UI";
+    };
+
+    enableGitHub = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable GitHub CLI";
+    };
+
+    enableGitleaks = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable gitleaks for secret detection";
     };
   };
 
-  config = lib.mkIf config.programs.git.enable {
+  config = lib.mkIf cfg.enable {
     programs.git = {
       # Delta configuration for better diffs
-      delta = lib.mkIf config.programs.git.enableDelta {
+      delta = lib.mkIf cfg.enableDelta {
         enable = true;
         options = {
           navigate = true;
@@ -34,17 +50,17 @@
       };
 
       # Git aliases
-      aliases = {
-        # Add your git aliases here
-        # st = "status";
-        # co = "checkout";
-        # br = "branch";
-      };
+      aliases = { };
 
       # Extra git configuration
       extraConfig = {
         init.defaultBranch = "main";
-        pull.rebase = true;
+
+        pull = {
+          rebase = true;
+          ff = "only";
+        };
+
         push = {
           autoSetupRemote = true;
           default = "simple";
@@ -54,11 +70,20 @@
         core = {
           editor = "nvim";
           excludesfile = "~/.gitignore";
+          autocrlf = "input";
         };
 
         # Merge and diff tools
-        merge.tool = "nvimdiff";
-        mergetool.keepBackup = false;
+        merge = {
+          tool = "nvimdiff";
+          conflictstyle = "diff3";
+        };
+
+        mergetool = {
+          keepBackup = false;
+          prompt = false;
+        };
+
         difftool.prompt = false;
 
         # Colors
@@ -72,31 +97,31 @@
         # Help
         help.autocorrect = 1;
 
+        # Performance
+        feature.manyFiles = true;
+
         # Include local config for user-specific settings
         include.path = "~/.gitconfig.local";
       };
     };
 
-    programs.lazygit = lib.mkIf config.programs.git.enableLazygit {
+    programs.lazygit = lib.mkIf cfg.enableLazygit {
       enable = true;
       settings = {
-        git.overrideGpg = true;
+        git = {
+          overrideGpg = true;
+          paging = {
+            colorArg = "always";
+            pager = "delta --paging=never";
+          };
+        };
+        os.editPreset = "nvim";
       };
     };
 
     # Git-related packages
     home.packages =
       with pkgs;
-      [
-        # GitHub CLI
-        gh
-
-        # Git UI and helpers
-
-        # Security
-        gitleaks # Detect secrets in git repos
-      ]
-      # Delta is conditionally added based on enableDelta option
-      ++ lib.optionals config.programs.git.enableDelta [ delta ];
+      lib.optional cfg.enableGitHub gh ++ lib.optional cfg.enableGitleaks gitleaks;
   };
 }

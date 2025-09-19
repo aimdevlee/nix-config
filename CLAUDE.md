@@ -34,7 +34,6 @@ This is a nix-darwin configuration repository for managing macOS system configur
 │   ├── nix.nix             # Nix development tools
 │   ├── nodejs.nix          # Node.js environment
 │   ├── shell-essentials.nix # Core shell utilities (ripgrep, fd, bat, etc.)
-│   ├── theme.nix           # Catppuccin theme configuration
 │   └── zsh.nix             # Zsh shell configuration
 ├── scripts/                  # Helper scripts (added to PATH via direnv)
 │   ├── rebuild              # Apply configuration (TARGET=personal|work)
@@ -50,12 +49,8 @@ This is a nix-darwin configuration repository for managing macOS system configur
 │   ├── aerospace/
 │   ├── karabiner/
 │   └── starship.toml
-├── overlays/                 # Package overlays
-│   ├── default.nix
-│   ├── config.nix
-│   └── unstable-packages.nix
-├── lib/
-│   └── utils.nix            # Minimal utility functions
+├── config/                   # Additional configuration files
+├── data/                     # Data files
 └── .envrc                   # direnv configuration (loads dev environment)
 ```
 
@@ -82,7 +77,7 @@ Each host:
 - `hosts/common/home.nix`: Shared home-manager settings, imports all programs
 
 ### 4. Program Modules (`programs/`)
-Simple, flat structure with 10 modules:
+Simple, flat structure with 9 modules:
 - Each module is self-contained with its own options
 - All modules use `programs.` namespace consistently
 - Can be enabled/disabled and configured per host
@@ -344,11 +339,11 @@ cd /private/etc/nix-darwin
 direnv allow          # Load environment and scripts
 
 # Make changes to configuration
-vim hosts/$(hostname -s)/home.nix
+vim hosts/profiles/<profile>/home.nix
 
 # Test and apply
 build-test           # Dry run to check for errors
-rebuild              # Apply if successful
+rebuild              # Apply if successful (uses TARGET env var)
 ```
 
 ## Troubleshooting
@@ -384,7 +379,8 @@ nix log /nix/store/<hash>-<name>.drv
 - All paths in Nix files should be relative
 - Homebrew cleanup is disabled by default (can enable with `cleanup = "zap"`)
 - Git working tree must be clean or staged for flake to see changes
-- Simple flat structure in `programs/` - 10 focused modules, no subcategories
+- Simple flat structure in `programs/` - 9 focused modules, no subcategories
+- Uses nixpkgs-unstable directly without overlay system for simplicity
 - Each profile has its own user configuration - personal vs work separation
 - Profile-based configuration - no machine hostnames in configuration
 

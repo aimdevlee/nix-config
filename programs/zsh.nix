@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  osConfig,
   ...
 }:
 {
@@ -25,10 +26,16 @@
         # ll = "eza -la --icons --octal-permissions --group-directories-first";
       };
 
-      initContent = ''
-        # Additional zsh configuration
-        # Add custom zsh configurations here
-      '';
+      initContent = lib.mkMerge [
+        (lib.mkIf (osConfig.homebrew.enable or false) ''
+          # Initialize Homebrew
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+        '')
+        ''
+          # Additional zsh configuration
+          # Add custom zsh configurations here
+        ''
+      ];
     };
 
     # Enable zoxide - a smarter cd command

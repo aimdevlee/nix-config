@@ -7,7 +7,6 @@
     ../../programs/lsp.nix
     ../../programs/zsh.nix
     ../../programs/git.nix
-    ../../programs/theme.nix
     ../../programs/dotfiles.nix
     ../../programs/nodejs.nix
     ../../programs/nix.nix
@@ -37,7 +36,24 @@
       enableCompletion = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
-      initContent = '''';
+      initContent = ''
+        # FZF configuration
+        export FZF_DEFAULT_OPTS="
+        --color=fg+:#e0def4,bg+:#393552,hl+:#ea9a97
+        --color=border:#44415a,header:#3e8fb0,gutter:#232136
+        --color=spinner:#f6c177,info:#9ccfd8
+        --color=pointer:#c4a7e7,marker:#eb6f92,prompt:#908caa"
+        FD_OPTS="--hidden --follow --strip-cwd-prefix --exclude .git"
+        export FZF_DEFAULT_COMMAND="fd --type=f $FD_OPTS"
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+        bindkey "ç" fzf-cd-widget
+        export FZF_ALT_C_COMMAND="fd --type=d $FD_OPTS"
+        export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
+        export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+
+        # Source local configuration if exists (contains sensitive functions)
+        [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+      '';
     };
 
     # Git configuration
@@ -45,6 +61,7 @@
       enable = true;
       enableDelta = true;
       enableLazygit = true;
+      enableGitHub = true;
       # userName is set in host-specific home.nix
       # userEmail is set in host-specific home.nix
     };
@@ -77,9 +94,9 @@
 
     cloud = {
       enable = true;
-      enableAWS = true;
-      enableTerraform = true;
-      enableKubernetes = true;
+      aws.enable = true;
+      terraform.enable = true;
+      kubernetes.enable = true;
     };
 
     containers.enable = true;
@@ -109,11 +126,10 @@
     };
 
     # Home state version
-    stateVersion = "25.05";
+    stateVersion = "24.11";
 
-    packages = with pkgs; [
-      go
-    ];
+    # Packages are managed through modules
+    packages = [ ];
   };
 
   services = {
