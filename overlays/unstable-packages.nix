@@ -1,5 +1,5 @@
 # Unstable packages overlay
-# Dynamically selects packages from nixpkgs-unstable based on configuration
+# Selects packages from nixpkgs-unstable based on configuration
 { inputs }:
 final: _prev:
 let
@@ -12,30 +12,13 @@ let
   # Import overlay configuration
   overlayConfig = import ./config.nix;
 
-  # Helper function to get unstable packages from a list
-  getUnstablePackages =
-    pkgList:
-    builtins.listToAttrs (
-      map (name: {
-        inherit name;
-        value = unstable.${name};
-      }) pkgList
-    );
-
-  # Combine all unstable packages
-  unstablePackages =
-    # Development tools
-    getUnstablePackages overlayConfig.development
-    # Terminal tools
-    // getUnstablePackages overlayConfig.terminal
-    # Cloud tools
-    // getUnstablePackages overlayConfig.cloud
-    # Container tools
-    // getUnstablePackages overlayConfig.containers
-    # Node.js special handling
-    // {
-      nodejs = unstable.${overlayConfig.nodejs.version};
-    };
+  # Create unstable package overrides
+  unstablePackages = builtins.listToAttrs (
+    map (name: {
+      inherit name;
+      value = unstable.${name};
+    }) overlayConfig.packages
+  );
 in
 unstablePackages
 // {

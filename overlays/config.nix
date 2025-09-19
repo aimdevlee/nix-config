@@ -1,38 +1,30 @@
-# Overlay configuration
-# Define which packages should use unstable versions
+# Overlay configuration - packages to use from unstable channel
 {
-  # Development tools that benefit from latest features
-  development = [
-    "gh" # GitHub CLI updates frequently
+  # All packages that should use unstable versions
+  packages = [
+    # Development tools
+    "gh" # GitHub CLI
     "nil" # Nix LSP
     "lua-language-server"
     "qmk"
-  ];
+    "neovim"
 
-  # Node.js ecosystem
-  nodejs = {
-    version = "nodejs_24"; # Specific Node.js version from unstable
-  };
+    # Terminal tools
+    "tmux"
+    "eza"
+    "zoxide"
 
-  # Terminal tools with frequent updates
-  terminal = [
-    "tmux" # Terminal multiplexer
-    "eza" # Modern ls replacement
-    "zoxide" # Smart cd
-  ];
+    # Cloud tools
+    "awscli2"
 
-  # Cloud and container tools that need latest APIs
-  cloud = [
-    "awscli2" # AWS CLI v2
-  ];
-
-  # Container tools
-  containers = [
-    "colima" # Container runtime
-    "docker-compose" # Compose for colima
+    # Container tools
+    "colima"
+    "docker-compose"
     "docker"
-  ];
 
-  # Additional packages can be added here
-  # Format: either a list of package names or an attrset with special handling
+    # Node.js versions (all versions from unstable)
+    "nodejs_20"
+    "nodejs_22"
+    "nodejs_24"
+  ];
 }
