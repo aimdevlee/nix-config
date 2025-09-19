@@ -61,9 +61,6 @@
     ];
   };
 
-  # Overlays configuration
-  nixpkgs.overlays = import ../../overlays/default.nix { inherit inputs; };
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
