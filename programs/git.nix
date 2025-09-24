@@ -29,12 +29,6 @@ in
       default = true;
       description = "Enable GitHub CLI";
     };
-
-    enableGitleaks = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Enable gitleaks for secret detection";
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -120,8 +114,6 @@ in
     };
 
     # Git-related packages
-    home.packages =
-      with pkgs;
-      lib.optional cfg.enableGitHub gh ++ lib.optional cfg.enableGitleaks gitleaks;
+    home.packages = with pkgs; lib.optional cfg.enableGitHub gh;
   };
 }

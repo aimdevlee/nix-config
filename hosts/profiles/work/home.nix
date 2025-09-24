@@ -33,10 +33,7 @@
 
   # Work profile package additions
   home.packages = with pkgs; [
-    # Add watchman only for work profile
-    watchman
-    # Add neovim even though dotfiles are disabled
-    neovim
+    #
   ];
 
   # Work profile module overrides

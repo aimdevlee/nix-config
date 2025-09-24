@@ -28,19 +28,19 @@ in
       };
     };
 
+    watchers = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Enable file watchers";
+      };
+    };
+
     network = {
       enable = lib.mkOption {
         type = lib.types.bool;
         default = true;
         description = "Enable network and download tools";
-      };
-    };
-
-    security = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-        description = "Enable security tools";
       };
     };
   };
@@ -60,13 +60,14 @@ in
         jq # JSON processor
         yq # YAML processor
       ]
+      ++ lib.optionals cfg.watchers.enable [
+        watchman
+        fswatch
+      ]
       ++ lib.optionals cfg.network.enable [
         wget # File downloader
         curl # Data transfer tool
         htop # Interactive process viewer
-      ]
-      ++ lib.optionals cfg.security.enable [
-        sops # Secrets management
       ];
   };
 }

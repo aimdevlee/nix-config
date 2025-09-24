@@ -1,10 +1,25 @@
 #!/usr/bin/env bash
 
-# Use TARGET environment variable if set, otherwise default to 'personal'
-TARGET="${TARGET:-personal}"
+# Auto-detect profile based on current user if TARGET not set
+if [ -z "$TARGET" ]; then
+    case "$(whoami)" in
+        "aimdevlee")
+            TARGET="personal"
+            ;;
+        "dongbin-lee")
+            TARGET="work"
+            ;;
+        *)
+            # Default to personal for unknown users
+            TARGET="personal"
+            echo "⚠️  Unknown user '$(whoami)', defaulting to personal profile"
+            ;;
+    esac
+fi
 
 echo "🔨 Rebuilding configuration for profile: $TARGET"
-echo "   (Set TARGET=work or TARGET=personal to switch profiles)"
+echo "   User: $(whoami)"
+echo "   (Override with TARGET=work or TARGET=personal if needed)"
 echo ""
 
 sudo darwin-rebuild switch --flake ".#$TARGET"

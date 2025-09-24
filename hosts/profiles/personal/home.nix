@@ -14,6 +14,27 @@ _: {
       shellAliases = {
       };
     };
+
+    # Adjust LSP languages to match enabled runtimes
+    lsp.languages = [
+      "lua"
+      "typescript"
+      "go"
+      "nix"
+      "python"
+      "rust"
+    ];
+  };
+
+  # Enable languages for personal development
+  languages = {
+    go.enable = true;
+    python = {
+      enable = true;
+      enablePoetry = true;
+    };
+    rust.enable = true;
+    lua.enable = true;
   };
   # Personal profile package additions
   # home.packages = with pkgs; [

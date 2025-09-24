@@ -20,6 +20,7 @@
 
   outputs =
     {
+      self,
       nixpkgs,
       nix-darwin,
       flake-utils,
@@ -32,7 +33,7 @@
         profile:
         nix-darwin.lib.darwinSystem {
           specialArgs = {
-            inherit inputs;
+            inherit inputs self;
             system = "aarch64-darwin"; # Explicitly define system
           };
           modules = [

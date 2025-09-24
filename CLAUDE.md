@@ -25,7 +25,7 @@ This is a nix-darwin configuration repository for managing macOS system configur
 │   └── common/              # Shared configurations
 │       ├── system.nix       # Common system settings
 │       └── home.nix         # Common home settings
-├── programs/                 # All program modules (flat structure)
+├── programs/                 # Program modules (utilities and tools)
 │   ├── cloud.nix           # AWS, Terraform, Kubernetes tools
 │   ├── containers.nix      # Docker/Podman configuration
 │   ├── dotfiles.nix        # Dotfile management
@@ -35,6 +35,11 @@ This is a nix-darwin configuration repository for managing macOS system configur
 │   ├── nodejs.nix          # Node.js environment
 │   ├── shell-essentials.nix # Core shell utilities (ripgrep, fd, bat, etc.)
 │   └── zsh.nix             # Zsh shell configuration
+├── languages/               # Language runtime modules
+│   ├── go.nix              # Go compiler and development tools
+│   ├── python.nix          # Python interpreter and tools (pip, poetry, etc.)
+│   ├── rust.nix            # Rust toolchain and cargo tools
+│   └── lua.nix             # Lua runtime and LuaRocks
 ├── scripts/                  # Helper scripts (added to PATH via direnv)
 │   ├── rebuild              # Apply configuration (TARGET=personal|work)
 │   ├── rebuild-personal     # Apply personal profile
@@ -77,11 +82,18 @@ Each host:
 - `hosts/common/home.nix`: Shared home-manager settings, imports all programs
 
 ### 4. Program Modules (`programs/`)
-Simple, flat structure with 9 modules:
+Program utilities and development tools:
 - Each module is self-contained with its own options
 - All modules use `programs.` namespace consistently
 - Can be enabled/disabled and configured per host
-- Packages are organized by function, not by usage category
+- Packages are organized by function
+
+### 5. Language Modules (`languages/`)
+Programming language runtimes and their tools:
+- Each language has its own module with runtime and development tools
+- All modules use `languages.` namespace consistently
+- Separate from LSP servers (which remain in `programs/lsp.nix`)
+- Can be enabled/disabled per profile
 
 ## Profile Configuration
 
@@ -214,7 +226,7 @@ z query <partial-name>
 - No `system.primaryUser` needed - use `homebrew.user` in profile's `system.nix`
 - Profiles are machine-independent (no hostname configuration)
 
-### Program Configuration
+### Program and Language Configuration
 Programs are configured in `hosts/common/home.nix` with profile-specific overrides in `hosts/profiles/<profile>/home.nix`:
 
 ```nix
@@ -222,26 +234,19 @@ Programs are configured in `hosts/common/home.nix` with profile-specific overrid
 programs = {
   # Core utilities - everyone needs these
   shellEssentials.enable = true;
-  
+
   # Language servers for development
   lsp = {
     enable = true;
     languages = ["lua" "typescript" "go" "nix"];
   };
-  
-  # Development tools
-  nodejs = {
-    enable = true;
-    version = "24";
-    packageManager = "npm";
-  };
-  
+
   # Git with tools
   git = {
     enable = true;
     # Includes gh, lazygit, gitleaks
   };
-  
+
   # Cloud tools
   cloud = {
     enable = true;
@@ -249,18 +254,41 @@ programs = {
     enableTerraform = true;
     enableKubernetes = true;
   };
-  
+
   # Container runtime
   containers = {
     enable = true;
     runtime = "podman";
     enableCompose = true;
   };
+
+  # Node.js (special case - stays in programs)
+  nodejs = {
+    enable = true;
+    version = "24";
+    packageManager = "npm";
+  };
+};
+
+# Language runtimes (disabled by default in common)
+languages = {
+  go.enable = false;
+  python.enable = false;
+  rust.enable = false;
+  lua.enable = false;
 };
 
 # Profile-specific (hosts/profiles/<profile>/home.nix)
-programs.nodejs.version = "20";  # Override for this profile
-programs.lsp.languages = ["typescript" "go"];  # Customize LSPs per profile
+languages = {
+  go.enable = true;
+  python = {
+    enable = true;
+    enablePoetry = true;
+  };
+  rust.enable = true;
+  lua.enable = true;
+};
+programs.lsp.languages = ["typescript" "go" "python" "rust"];  # Match enabled languages
 ```
 
 ### Homebrew Configuration
@@ -379,7 +407,7 @@ nix log /nix/store/<hash>-<name>.drv
 - All paths in Nix files should be relative
 - Homebrew cleanup is disabled by default (can enable with `cleanup = "zap"`)
 - Git working tree must be clean or staged for flake to see changes
-- Simple flat structure in `programs/` - 9 focused modules, no subcategories
+- Clear separation: `programs/` for utilities, `languages/` for language runtimes
 - Uses nixpkgs-unstable directly without overlay system for simplicity
 - Each profile has its own user configuration - personal vs work separation
 - Profile-based configuration - no machine hostnames in configuration

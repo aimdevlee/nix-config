@@ -1,6 +1,7 @@
 # Personal profile configuration
 {
   inputs,
+  self,
   system,
   ...
 }:
@@ -20,7 +21,7 @@
     users.aimdevlee = import ./home.nix;
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = { inherit inputs self; };
   };
 
   # System platform (passed from flake)

@@ -6,10 +6,10 @@
   ...
 }:
 let
-  cfg = config.programs.nodejs;
+  cfg = config.languages.nodejs;
 in
 {
-  options.programs.nodejs = {
+  options.languages.nodejs = {
     enable = lib.mkEnableOption "Node.js development environment";
 
     version = lib.mkOption {

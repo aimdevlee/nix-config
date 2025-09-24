@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+
+echo "📊 Nix-Darwin System Status"
+echo "══════════════════════════════════════════"
+echo ""
+
+# Current user and expected profile
+CURRENT_USER="$(whoami)"
+case "$CURRENT_USER" in
+    "aimdevlee")
+        EXPECTED_PROFILE="personal"
+        ;;
+    "dongbin-lee")
+        EXPECTED_PROFILE="work"
+        ;;
+    *)
+        EXPECTED_PROFILE="unknown"
+        ;;
+esac
+
+echo "👤 Current User: $CURRENT_USER"
+echo "📁 Expected Profile: $EXPECTED_PROFILE"
+echo ""
+
+# System information
+echo "💻 System Information:"
+echo "   Platform: $(uname -s) $(uname -m)"
+echo "   OS Version: $(sw_vers -productVersion)"
+echo "   Hostname: $(hostname)"
+echo ""
+
+# Nix information
+echo "❄️  Nix Information:"
+echo "   Nix Version: $(nix --version | head -1)"
+if [ -L /run/current-system ]; then
+    echo "   Current System: $(readlink /run/current-system | xargs basename)"
+    LAST_MODIFIED=$(stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" /run/current-system 2>/dev/null || echo "Unknown")
+    echo "   Last Switch: $LAST_MODIFIED"
+else
+    echo "   ⚠️  No darwin-rebuild system found"
+fi
+echo ""
+
+# Git status
+echo "📝 Repository Status:"
+cd "$(dirname "$0")/.." || exit
+if git rev-parse --git-dir > /dev/null 2>&1; then
+    BRANCH=$(git branch --show-current)
+    DIRTY=$(git status --porcelain | wc -l | xargs)
+    LAST_COMMIT=$(git log -1 --format="%h %s" 2>/dev/null)
+
+    echo "   Branch: $BRANCH"
+    echo "   Dirty Files: $DIRTY"
+    echo "   Last Commit: $LAST_COMMIT"
+else
+    echo "   Not a git repository"
+fi
+echo ""
+
+# Flake information
+echo "🔧 Flake Outputs:"
+if [ -f flake.nix ]; then
+    echo "   Available Profiles:"
+    # Simple grep for darwinConfigurations instead of full evaluation
+    grep -E "^\s*(personal|work|dev)" flake.nix | grep "=" | awk '{print $1}' | sed 's/^/      - /' || echo "      - personal"$'\n'"      - work"
+else
+    echo "   No flake.nix found"
+fi
+echo ""
+
+# Quick checks
+echo "✅ Quick Checks:"
+
+# Check if current profile matches expected
+if [ -L /run/current-system ]; then
+    CURRENT_PROFILE=$(readlink /run/current-system | grep -o 'darwin-system-.*' | head -1)
+    echo -n "   Profile Match: "
+    if [[ "$CURRENT_PROFILE" == *"$EXPECTED_PROFILE"* ]] || [ "$EXPECTED_PROFILE" == "unknown" ]; then
+        echo "✓"
+    else
+        echo "✗ (May need to rebuild with correct profile)"
+    fi
+fi
+
+# Check if Homebrew is installed
+echo -n "   Homebrew: "
+if command -v brew >/dev/null 2>&1; then
+    echo "✓ ($(brew --version | head -1))"
+else
+    echo "✗"
+fi
+
+# Check if direnv is active
+echo -n "   Direnv: "
+if [ -n "$DIRENV_DIR" ]; then
+    echo "✓ (Active in this directory)"
+elif command -v direnv >/dev/null 2>&1; then
+    echo "✓ (Installed but not active here)"
+else
+    echo "✗"
+fi
+
+echo ""
+echo "💡 Tip: Run 'rebuild' to apply configuration for your profile"

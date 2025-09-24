@@ -1,5 +1,9 @@
 # Common home-manager configuration for all hosts
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  ...
+}:
 {
   imports = [
     # Import all common programs
@@ -7,11 +11,23 @@
     ../../programs/lsp.nix
     ../../programs/zsh.nix
     ../../programs/git.nix
-    ../../programs/dotfiles.nix
-    ../../programs/nodejs.nix
     ../../programs/nix.nix
     ../../programs/cloud.nix
     ../../programs/containers.nix
+    ../../programs/security.nix
+    # User programs with custom configs
+    ../../programs/neovim.nix
+    ../../programs/tmux.nix
+    ../../programs/starship.nix
+    ../../programs/ghostty.nix
+    ../../programs/aerospace.nix
+    ../../programs/karabiner.nix
+    # Language runtime modules
+    ../../languages/go.nix
+    ../../languages/python.nix
+    ../../languages/rust.nix
+    ../../languages/lua.nix
+    ../../languages/nodejs.nix
   ];
 
   # Common program configurations
@@ -66,8 +82,10 @@
       # userEmail is set in host-specific home.nix
     };
 
-    # Theme configuration
-    starship.enable = false;
+    # Starship prompt (disabled, using oh-my-posh)
+    starship = {
+      enable = false; # Using oh-my-posh instead
+    };
 
     # Oh My Posh prompt
     oh-my-posh = {
@@ -83,13 +101,6 @@
       nix-direnv.enable = true; # Better Nix integration with caching
     };
 
-    # Enable programs
-    nodejs = {
-      enable = true;
-      version = "24";
-      enableCorepack = true; # Disabled to avoid build issues
-    };
-
     nix.enableTools = true;
 
     cloud = {
@@ -101,9 +112,21 @@
 
     containers.enable = true;
 
-    dotfiles = {
+    security = {
       enable = true;
-      configs.starship = false;
+      secrets = {
+        enable = true;
+        tools = [
+          "sops"
+          "age"
+        ];
+      };
+      scanning = {
+        enable = true;
+        tools = [ "gitleaks" ];
+      };
+      certificates.enable = false;
+      passwords.enable = false;
     };
 
     # GPG configuration
@@ -113,6 +136,33 @@
 
     fastfetch = {
       enable = true;
+    };
+
+    # Neovim and tmux are managed by userPrograms
+    # No need to set them here as userPrograms will enable them
+  };
+
+  # User programs with custom configurations
+  # Now using Nix native approach: copy + onChange
+  userPrograms = {
+    neovim.enable = true;
+    tmux.enable = true;
+    starship.enable = false; # Using oh-my-posh instead
+    ghostty.enable = true;
+    aerospace.enable = true;
+    karabiner.enable = true;
+  };
+
+  # Language runtimes (disabled by default, enable per profile)
+  languages = {
+    go.enable = lib.mkDefault true;
+    python.enable = lib.mkDefault false;
+    rust.enable = lib.mkDefault false;
+    lua.enable = lib.mkDefault false;
+    nodejs = {
+      enable = lib.mkDefault true; # Node.js is commonly needed
+      version = lib.mkDefault "24";
+      enableCorepack = lib.mkDefault true;
     };
   };
 
@@ -128,8 +178,10 @@
     # Home state version
     stateVersion = "24.11";
 
-    # Packages are managed through modules
-    packages = [ ];
+    # Packages that don't need home-manager module configuration
+    packages = with pkgs; [
+      # Add standalone packages here if needed
+    ];
   };
 
   services = {
