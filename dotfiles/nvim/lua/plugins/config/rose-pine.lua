@@ -4,6 +4,9 @@ require("rose-pine").setup({
   dim_inactive_windows = true,
   highlight_groups = {
     Visual = { fg = "text", bg = "love" },
+  },
+  styles = {
+    transparency = true
   }
 })
 
