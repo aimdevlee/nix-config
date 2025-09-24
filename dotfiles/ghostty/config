@@ -26,5 +26,4 @@ quick-terminal-animation-duration = 0.08
 quick-terminal-position = center
 shell-integration-features = no-cursor
 theme = Rose Pine Moon
-window-padding-x = 4,2
-window-padding-y = 6,0
+window-padding-color = extend
