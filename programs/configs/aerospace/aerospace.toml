@@ -9,9 +9,7 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = [
-  'exec-and-forget borders active_color=0xff7287fd inactive_color=0xff494d64 width=5.0',
-]
+after-startup-command = ['exec-and-forget borders active_color=0xffea9a97 inactive_color=0xff3e8fb0 width=10.0']
 
 # Start AeroSpace at login
 start-at-login = true
@@ -167,10 +165,10 @@ m = [
 # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 #s = ['layout sticky tiling', 'mode main']
 
-alt-shift-h = ['join-with left', 'mode main']
-alt-shift-j = ['join-with down', 'mode main']
-alt-shift-k = ['join-with up', 'mode main']
-alt-shift-l = ['join-with right', 'mode main']
+alt-shift-h = 'join-with left'
+alt-shift-j = 'join-with down'
+alt-shift-k = 'join-with up'
+alt-shift-l = 'join-with right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
 h = 'focus left'

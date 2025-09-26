@@ -24,5 +24,11 @@ in
     home.file.".config/tmux/tmux.conf" = {
       source = ./configs/tmux/tmux.conf;
     };
+
+    programs.zsh.shellAliases = lib.mkIf config.programs.zsh.enable {
+      tx = "tmuxinator";
+      txn = "tmuxinator new";
+      txs = "tmuxinator start";
+    };
   };
 }
