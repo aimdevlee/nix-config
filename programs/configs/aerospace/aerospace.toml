@@ -9,7 +9,7 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = ['exec-and-forget borders active_color=0xffea9a97 inactive_color=0xff3e8fb0 width=10.0']
+after-startup-command = ['exec-and-forget zsh -ic borders active_color=0xffea9a97 inactive_color=0xff3e8fb0 width=10.0']
 
 # Start AeroSpace at login
 start-at-login = true

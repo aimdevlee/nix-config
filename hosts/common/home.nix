@@ -181,6 +181,8 @@
     # Packages that don't need home-manager module configuration
     packages = with pkgs; [
       # Add standalone packages here if needed
+      jankyborders
+      aerospace
     ];
   };
 

@@ -81,7 +81,6 @@
 
       # System Enhancement
       "karabiner-elements" # Keyboard customization
-      "aerospace" # Tiling window manager
 
       # Web & Network
       "google-chrome" # Web browser
